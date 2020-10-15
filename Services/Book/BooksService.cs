@@ -44,7 +44,13 @@ namespace TP.Services.Book
         /// </summary>
         /// <param name="book"></param>
         public async Task<BookDTO> PostBook(BookDTO book) {
-            return await _booksRepository.AddBook(_mapper.Map<BookCollection>(book));
+            try {
+                return await _booksRepository.AddBook(_mapper.Map<BookCollection>(book));
+            }
+            catch {
+                throw;
+            }
+            
         }
 
         /// <summary>

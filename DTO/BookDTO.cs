@@ -14,7 +14,7 @@ namespace TP.DTO
         /// Unique identifier of this book.
         /// </summary>
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// The title of the book
@@ -50,7 +50,7 @@ namespace TP.DTO
         /// page count.
         /// </summary>
         [JsonProperty("pageCount")]
-        public int PageCount { get; set; }
+        public string PageCount { get; set; }
 
         /// <summary>
         /// print type.
@@ -62,13 +62,13 @@ namespace TP.DTO
         /// average rating.
         /// </summary>
         [JsonProperty("averageRating")]
-        public int AverageRating { get; set; }
+        public string AverageRating { get; set; }
 
         /// <summary>
         /// ratings count.
         /// </summary>
         [JsonProperty("ratingsCount")]
-        public int RatingsCount { get; set; }
+        public string RatingsCount { get; set; }
 
         /// <summary>
         /// Image links.
