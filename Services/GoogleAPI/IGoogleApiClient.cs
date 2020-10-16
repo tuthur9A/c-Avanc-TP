@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using TP.Filters;
 
 namespace TP.Services.GoogleAPI
 {
@@ -8,6 +9,6 @@ namespace TP.Services.GoogleAPI
     public interface IGoogleAPIClientService
     {
 #pragma warning disable 1591
-        Task<string> Search(string text);
+        Task<string> Search(GoogleAPIFilters filters);
     }
 }

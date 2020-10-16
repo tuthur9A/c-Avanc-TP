@@ -41,11 +41,15 @@ namespace TP.Controllers
         }
 
         [HttpGet, Route("/google")]
-        public async Task<IActionResult> GetFromGoogle([FromQuery(Name = "q")] string search)
+        public async Task<IActionResult> GetFromGoogle([FromQuery(Name = "title")] string qTitle, [FromQuery(Name = "author")] string qAuthor)
         {
             var booksList = new List<BookDTO>(){};
             try {
-                dynamic result = JsonConvert.DeserializeObject(await _googleApiClientService.Search(search));
+                var filters = new GoogleAPIFilters(){
+                    FilterByTitle = qTitle,
+                    FilterByAuthor = qAuthor
+                };
+                dynamic result = JsonConvert.DeserializeObject(await _googleApiClientService.Search(filters));
                 foreach (var item in result.items)
                 {
                     var book = new BookDTO() {};
@@ -106,7 +110,7 @@ namespace TP.Controllers
             return Ok(booksList);
         }
 
-                [HttpGet, Route("/search")]
+        [HttpGet, Route("/search")]
         public async Task<IActionResult> Search([FromQuery(Name = "title")] string title)
         {
             IEnumerable<BookDTO> booksList ;

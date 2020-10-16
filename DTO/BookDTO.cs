@@ -60,13 +60,13 @@ namespace TP.DTO
         /// average rating.
         /// </summary>
         [JsonProperty("averageRating")]
-        public string AverageRating { get; set; }
+        public int? AverageRating { get; set; } = null;
 
         /// <summary>
         /// ratings count.
         /// </summary>
         [JsonProperty("ratingsCount")]
-        public string RatingsCount { get; set; }
+        public int? RatingsCount { get; set; } = null;
 
         /// <summary>
         /// Image links.

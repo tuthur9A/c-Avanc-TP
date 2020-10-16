@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Serilog;
+using TP.Filters;
 
 namespace TP.Services.GoogleAPI
 {
@@ -23,14 +24,21 @@ namespace TP.Services.GoogleAPI
         }
 
         /// <summary>
-        /// Generate tokenizer.
+        /// Search by title.
         /// </summary>
         /// <param name="sendMessage"></param>
         /// <returns>HttpResponseMessage</returns>
-        public async Task<string> Search(string text)
+        public async Task<string> Search(GoogleAPIFilters filters)
         {
-            Log.ForContext<GoogleAPIClientService>().Information(JsonConvert.SerializeObject(text));
-            var result = await _httpClient.GetAsync("https://www.googleapis.com/books/v1/volumes?q=" + text);
+            var baseUrl = "https://www.googleapis.com/books/v1/volumes?q=";
+            if(filters.FilterByTitle != null && filters.FilterByTitle != "") {
+                baseUrl += "intitle:" + filters.FilterByTitle + "+";
+            }
+            if(filters.FilterByAuthor != null && filters.FilterByAuthor != "") {
+                baseUrl += "inauthor:" + filters.FilterByAuthor + "+";
+            }
+            Log.ForContext<GoogleAPIClientService>().Information(JsonConvert.SerializeObject(baseUrl));
+            var result = await _httpClient.GetAsync(baseUrl);
             return await result.Content.ReadAsStringAsync();
         }
     }
