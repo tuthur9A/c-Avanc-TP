@@ -83,8 +83,9 @@ namespace TP.Controllers
                     await _bookService.PostBook(book);
                 }
             }
-            catch (Exception e) {
-                return Problem("Error");
+            catch (ArgumentException e) {
+                Console.WriteLine(e);
+                return Problem("the book '" + booksList.Last().Title + "' is already in db");
             }
             return Ok(booksList);
         }

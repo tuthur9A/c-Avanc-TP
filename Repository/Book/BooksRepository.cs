@@ -6,9 +6,8 @@ using MongoDB.Driver;
 using TP.Collection;
 using TP.Data;
 using TP.DTO;
-using TP.Repository.Book;
 
-namespace TP.Services.Book
+namespace TP.Repository.Book
 {
     /// <summary>
     /// Book service.
@@ -56,7 +55,7 @@ namespace TP.Services.Book
         public async Task<BookDTO> AddBook(BookCollection book) {
             var applyFilter = _builderFilter.Where(bookInDb => bookInDb.Title == book.Title);
             if (await _context.BookCollection.Find(applyFilter).FirstOrDefaultAsync() != null) {
-                throw new Exception("the book " + book.Title + " is already in db");
+                throw new ArgumentException("the book " + book.Title + " is already in db");
             }
             await _context.BookCollection.InsertOneAsync(book);
             var bookInserted = await _context.BookCollection.Find(applyFilter).FirstOrDefaultAsync();

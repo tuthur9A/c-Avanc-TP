@@ -8,7 +8,7 @@ namespace TP.Collection
     /// Shelves relation collection
     /// </summary>
     [BsonIgnoreExtraElements]
-    public class ShelvesCollection
+    public class ShelveCollection
     {
         /// <summary>
         /// Unique identifier

@@ -47,11 +47,11 @@ namespace TP.Data
         /// Scenario collection
         /// </summary>
         /// <value></value>
-        public IMongoCollection<ShelvesCollection> ShelvesCollection
+        public IMongoCollection<ShelveCollection> ShelveCollection
         {
             get
             {
-                return _database.GetCollection<ShelvesCollection>("shelves");
+                return _database.GetCollection<ShelveCollection>("shelves");
             }
         }
     }
