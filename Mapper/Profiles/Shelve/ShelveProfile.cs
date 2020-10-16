@@ -17,12 +17,14 @@ namespace TP.Mappers.Profiles.Shelve
         {
             CreateMap<ShelveDTO, ShelveCollection>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.BookId, opt => opt.MapFrom(src => src.Book.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.BookIds, opt => opt.MapFrom(src => src.Books))
             .ForAllOtherMembers(opt => opt.Ignore());
 
             CreateMap<ShelveCollection, ShelveDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Book, opt => opt.MapFrom<BookByBookIdResolver>())
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Books, opt => opt.MapFrom<BookByBookIdResolver>())
             .ForAllOtherMembers(opt => opt.Ignore());
 
             CreateMap<ShelveCreateDTO, ShelveCollection>();

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Serilog;
+using TP.CustomException;
 using TP.DTO;
-using TP.Services.Book;
-using TP.Services.GoogleAPI;
+using TP.Filters;
 using TP.Services.Shelve;
 
 namespace TP.Controllers
@@ -28,21 +25,77 @@ namespace TP.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _shelvesService = shelvesService ?? throw new ArgumentNullException(nameof(shelvesService));
         }
-        [HttpGet, Route("/shelve/add")]
-        public async Task<IActionResult> AddToShelve([FromQuery(Name = "id")] string id)
+        
+        [HttpGet, Route("/shelves")]
+        public async Task<IActionResult> Get()
         {
-            ShelveDTO result;
+            IEnumerable<ShelveDTO> result;
             try {
-                var createShelve = new ShelveCreateDTO() {
-                    BookId = id,
-                };
-                result = await _shelvesService.PostShelve(createShelve);
+                result = await _shelvesService.GetShelves(new ShelvesFilters(){});
             }
-            catch (ArgumentException e) {
+            catch (AlreadyInDBException e) {
                 Console.WriteLine(e);
                 return Problem(e.Message);
             }
+            catch (NotFoundException e) {
+                Console.WriteLine(e);
+                return NotFound(e.Message);
+            }
+            catch (BadRequestException e) {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
+            }
             return Ok(result);
+        }
+
+        [HttpGet, Route("/shelves/search")]
+        public async Task<IActionResult> Search([FromQuery (Name = "id")] string id)
+        {
+            IEnumerable<ShelveDTO> result;
+            try {
+                result = await _shelvesService.GetShelves(new ShelvesFilters(){
+                    FilterByBookId = id,
+                });
+            }
+            catch (AlreadyInDBException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            catch (NotFoundException e) {
+                Console.WriteLine(e);
+                return NotFound(e.Message);
+            }
+            catch (BadRequestException e) {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
+            }
+            return Ok(result);
+        }
+        
+        [HttpPost, Route("/shelves/add")]
+        public async Task<IActionResult> AddToShelve([FromBody] ShelveCreateDTO createShelveDTO)
+        {
+            ShelveDTO result;
+            try {
+                result = await _shelvesService.PostShelve(createShelveDTO);
+            }
+            catch (AlreadyInDBException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            catch (NotFoundException e) {
+                Console.WriteLine(e);
+                return NotFound(e.Message);
+            }
+            catch (BadRequestException e) {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
+            }
+            catch (ArgumentNullException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            return Created("/shelve/add", result);
         }
     }
 }

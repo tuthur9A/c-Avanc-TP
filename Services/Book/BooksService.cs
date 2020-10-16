@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using TP.Collection;
+using TP.CustomException;
 using TP.DTO;
 using TP.Repository.Book;
 
@@ -59,6 +60,9 @@ namespace TP.Services.Book
         /// <param name="id"></param>
         /// <param name="updatedBook"></param>
         public async Task<BookDTO> PutBook(string id, BookDTO updatedBook) {
+            if (id != updatedBook.Id) {
+                throw new BadRequestException("the id '" + id + "' is different of the DTO (dto id : '" + updatedBook.Id + "') .");
+            }
             return await _booksRepository.UpdateBook(id, _mapper.Map<BookCollection>(updatedBook));
         }
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Serilog;
+using TP.CustomException;
 using TP.DTO;
 using TP.Services.Book;
 using TP.Services.GoogleAPI;
@@ -83,9 +84,17 @@ namespace TP.Controllers
                     await _bookService.PostBook(book);
                 }
             }
-            catch (ArgumentException e) {
+            catch (AlreadyInDBException e) {
                 Console.WriteLine(e);
-                return Problem("the book '" + booksList.Last().Title + "' is already in db");
+                return Problem(e.Message);
+            }
+            catch (NotFoundException e) {
+                Console.WriteLine(e);
+                return NotFound(e.Message);
+            }
+            catch (BadRequestException e) {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
             }
             return Ok(booksList);
         }

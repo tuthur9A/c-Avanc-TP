@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using TP.Collection;
 using TP.DTO;
+using TP.Filters;
 
 namespace TP.Services.Shelve
 {
@@ -13,7 +14,7 @@ namespace TP.Services.Shelve
     {
 #pragma warning disable 1591
         Task<ShelveDTO> GetShelve(string id);
-        Task<IEnumerable<ShelveDTO>> GetShelves();
+        Task<IEnumerable<ShelveDTO>> GetShelves(ShelvesFilters filters);
         Task<ShelveDTO> PostShelve(ShelveCreateDTO Shelve);
         Task<ShelveDTO> PutShelve(string id, ShelveCreateDTO updatedShelve);
         Task DeleteShelve(string id);

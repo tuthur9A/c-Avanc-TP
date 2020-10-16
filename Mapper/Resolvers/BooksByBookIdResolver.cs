@@ -1,7 +1,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using TP.Collection;
 using TP.DTO;
@@ -12,11 +11,10 @@ namespace TP.Resolvers
     /// <summary>
     /// Book resolver By Id.
     /// </summary>
-    public class BookByBookIdResolver : IValueResolver<ShelveCollection, ShelveDTO, BookDTO>
+    public class BookByBookIdResolver : IValueResolver<ShelveCollection, ShelveDTO, IEnumerable<BookDTO>>
     {
         private readonly IBooksRepository _booksRepository;
-        private readonly IMapper _mapper;
-
+        
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -36,10 +34,15 @@ namespace TP.Resolvers
         /// <param name="sourceMember"></param>
         /// <param name="context"></param>
         /// <returns>UserSetting id</returns>
-        public BookDTO Resolve(ShelveCollection source, ShelveDTO destination, BookDTO returnMember, ResolutionContext context)
+        public IEnumerable<BookDTO> Resolve(ShelveCollection source, ShelveDTO destination, IEnumerable<BookDTO> returnMember, ResolutionContext context)
         {
-            var book = _booksRepository.GetBookById(source.BookId).Result;
-            return book;
+            var elem = new List<BookDTO>(){};
+            foreach(var bookId in source.BookIds) {
+                var book = _booksRepository.GetBookById(bookId).Result;
+                elem.Add(book);
+            }
+            
+            return elem;
         }
     }
 }

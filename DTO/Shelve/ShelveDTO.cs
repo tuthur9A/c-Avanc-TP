@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace TP.DTO
@@ -16,8 +17,14 @@ namespace TP.DTO
         /// <summary>
         /// The title of the book
         /// </summary>
-        [JsonProperty("book")]
-        public BookDTO Book { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The title of the book
+        /// </summary>
+        [JsonProperty("books")]
+        public IEnumerable<BookDTO> Books { get; set; }
 
     }
 }

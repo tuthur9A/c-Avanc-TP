@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MongoDB.Driver;
 using TP.Collection;
+using TP.CustomException;
 using TP.Data;
 using TP.DTO;
 
@@ -36,6 +38,9 @@ namespace TP.Repository.Book
         public async Task<BookDTO> GetBookById(string id) {
             var applyFilter = _builderFilter.Where(book => book.Id == id);
             var result = await _context.BookCollection.Find(applyFilter).FirstOrDefaultAsync();
+            if (result is null) {
+                throw new NotFoundException("the book id '" + id + "' can't be found");
+            }
             return _mapper.Map<BookDTO>(result);
         }
 
@@ -44,7 +49,7 @@ namespace TP.Repository.Book
         /// </summary>
         public async Task<IEnumerable<BookDTO>> GetAllBooks() {
             var applyFilter = _builderFilter.Empty;
-            var result = await _context.BookCollection.Find(applyFilter).ToListAsync();
+            var result = await _context.BookCollection.Find(applyFilter).SortBy(book => book.Authors).ToListAsync();
             return _mapper.Map<IEnumerable<BookDTO>>(result);
         }
 
@@ -55,7 +60,7 @@ namespace TP.Repository.Book
         public async Task<BookDTO> AddBook(BookCollection book) {
             var applyFilter = _builderFilter.Where(bookInDb => bookInDb.Title == book.Title);
             if (await _context.BookCollection.Find(applyFilter).FirstOrDefaultAsync() != null) {
-                throw new ArgumentException("the book " + book.Title + " is already in db");
+                throw new AlreadyInDBException("the book " + book.Title + " is already in db");
             }
             await _context.BookCollection.InsertOneAsync(book);
             var bookInserted = await _context.BookCollection.Find(applyFilter).FirstOrDefaultAsync();
@@ -70,7 +75,7 @@ namespace TP.Repository.Book
         public async Task<BookDTO> UpdateBook(string id, BookCollection updatedBook) {
             var applyFilter = _builderFilter.Where(bookInDb => bookInDb.Id == id);
             if (await _context.BookCollection.Find(applyFilter).FirstOrDefaultAsync() == null) {
-                throw new Exception("the book with Id " + id + " is not in DB");
+                throw new NotFoundException("the book with Id " + id + " is not in DB");
             }
              var update = Builders<BookCollection>.Update
                 .Set("title", updatedBook.Title )

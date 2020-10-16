@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -21,8 +22,15 @@ namespace TP.Collection
         /// <summary>
         /// Unique identifier
         /// </summary>
-        [BsonElement("book_id")]
+        [BsonElement("name")]
         [Required]
-        public string BookId { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Unique identifier
+        /// </summary>
+        [BsonElement("bookIds")]
+        [Required]
+        public IEnumerable<string> BookIds { get; set; }
     }
 }

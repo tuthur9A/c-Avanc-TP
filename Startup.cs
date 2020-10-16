@@ -16,8 +16,10 @@ using Microsoft.Extensions.Options;
 using TP.Configurations;
 using TP.Data;
 using TP.Repository.Book;
+using TP.Repository.Shelve;
 using TP.Services.Book;
 using TP.Services.GoogleAPI;
+using TP.Services.Shelve;
 
 namespace TP
 {
@@ -67,8 +69,10 @@ namespace TP
         {
             ///Service
             services.AddTransient<IBooksService, BooksService>();
+            services.AddTransient<IShelvesService, ShelvesService>();
             ///Repo
             services.AddTransient<IBooksRepository, BooksRepository>();
+            services.AddTransient<IShelvesRepository, ShelvesRepository>();
         }
 
          /// <summary>

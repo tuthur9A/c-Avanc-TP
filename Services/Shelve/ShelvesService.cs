@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MongoDB.Driver;
 using TP.Collection;
-using TP.Data;
+using TP.CustomException;
 using TP.DTO;
+using TP.Filters;
 using TP.Repository.Shelve;
 
 namespace TP.Services.Shelve
@@ -39,8 +41,8 @@ namespace TP.Services.Shelve
         /// <summary>
         /// Get All.
         /// </summary>
-        public async Task<IEnumerable<ShelveDTO>> GetShelves() {
-            return await _shelvesRepository.GetAllShelves();
+        public async Task<IEnumerable<ShelveDTO>> GetShelves(ShelvesFilters filters) {
+            return await _shelvesRepository.GetAllShelves(filters);
         }
 
         /// <summary>
@@ -50,6 +52,10 @@ namespace TP.Services.Shelve
         public async Task<ShelveDTO> PostShelve(ShelveCreateDTO shelve) {
             try
             {
+                if (shelve.BookIds is null || shelve.BookIds.Count() == 0) {
+                    throw new ArgumentNullException("bookIds is null");
+                }
+                
                 return await _shelvesRepository.AddShelve(_mapper.Map<ShelveCollection>(shelve));
             }
             catch {
@@ -63,6 +69,9 @@ namespace TP.Services.Shelve
         /// <param name="id"></param>
         /// <param name="updatedShelve"></param>
         public async Task<ShelveDTO> PutShelve(string id, ShelveCreateDTO updatedShelve) {
+            if (id != updatedShelve.Id) {
+                throw new BadRequestException("the id '" + id + "' is different of the DTO (dto id : '" + updatedShelve.Id + "') .");
+            }
             return await _shelvesRepository.UpdateShelve(id, _mapper.Map<ShelveCollection>(updatedShelve));
         }
 

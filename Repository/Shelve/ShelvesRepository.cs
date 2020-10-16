@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MongoDB.Driver;
 using TP.Collection;
+using TP.CustomException;
 using TP.Data;
 using TP.DTO;
+using TP.Filters;
 
 namespace TP.Repository.Shelve
 {
@@ -36,14 +39,20 @@ namespace TP.Repository.Shelve
         public async Task<ShelveDTO> GetShelveById(string id) {
             var applyFilter = _builderFilter.Where(book => book.Id == id);
             var result = await _context.ShelveCollection.Find(applyFilter).FirstOrDefaultAsync();
+            if (result is null) {
+                throw new NotFoundException("the shelve id '" + id + "' can't be found");
+            }
             return _mapper.Map<ShelveDTO>(result);
         }
 
         /// <summary>
         /// Get All.
         /// </summary>
-        public async Task<IEnumerable<ShelveDTO>> GetAllShelves() {
+        public async Task<IEnumerable<ShelveDTO>> GetAllShelves(ShelvesFilters filters) {
             var applyFilter = _builderFilter.Empty;
+            if( filters.FilterByBookId != null ){
+                applyFilter = _builderFilter.Where(shelve => shelve.BookIds.Any(b => b == filters.FilterByBookId));
+            }
             var result = await _context.ShelveCollection.Find(applyFilter).ToListAsync();
             return _mapper.Map<IEnumerable<ShelveDTO>>(result);
         }
@@ -53,10 +62,7 @@ namespace TP.Repository.Shelve
         /// </summary>
         /// <param name="shelve"></param>
         public async Task<ShelveDTO> AddShelve(ShelveCollection shelve) {
-            var applyFilter = _builderFilter.Where(shelveInDb => shelveInDb.BookId == shelve.BookId);
-            if (await _context.ShelveCollection.Find(applyFilter).FirstOrDefaultAsync() != null) {
-                throw new ArgumentException("the shelve with bookId " + shelve.BookId + " is already in db");
-            }
+            var applyFilter = _builderFilter.Where(shelveInDb => shelveInDb.Name == shelve.Name);
             await _context.ShelveCollection.InsertOneAsync(shelve);
             var bookInserted = await _context.ShelveCollection.Find(applyFilter).FirstOrDefaultAsync();
             return _mapper.Map<ShelveDTO>(bookInserted);
@@ -70,10 +76,10 @@ namespace TP.Repository.Shelve
         public async Task<ShelveDTO> UpdateShelve(string id, ShelveCollection updatedShelve) {
             var applyFilter = _builderFilter.Where(shelveInDb => shelveInDb.Id == id);
             if (await _context.ShelveCollection.Find(applyFilter).FirstOrDefaultAsync() == null) {
-                throw new Exception("the book with Id " + id + " is not in DB");
+                throw new NotFoundException("the book with Id " + id + " is not in DB");
             }
              var update = Builders<ShelveCollection>.Update
-                .Set("book_id", updatedShelve.BookId );
+                .Set("bookIds", updatedShelve.BookIds );
                 await _context.ShelveCollection.UpdateOneAsync(applyFilter, update);
                 var result = await _context.ShelveCollection.Find(applyFilter).FirstOrDefaultAsync();
             return _mapper.Map<ShelveDTO>(result);
