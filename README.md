@@ -4,7 +4,9 @@ Books
 =============
 #### API ENDPOINT
 Get from Google : `https://{{Domaine}}/google?title=??&author=??`
+
 GetAll books : `https://{{Domaine}}/`
+
 search books in shelve : `https://{{Domaine}}/`
 
 Shelve
