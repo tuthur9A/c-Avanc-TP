@@ -88,7 +88,7 @@ namespace TP.Services.Shelve
         /// <param name="id"></param>
         public async Task<ShelveDTO> AddBookToShelve(string bookId, string shelveId){
             var shelve = await _shelvesRepository.GetShelveById(shelveId);
-            var bookList = shelve.Books.Select(b => bookId).Distinct().ToList();
+            var bookList = shelve.Books.Select(b => b.Id).ToList();
             bookList.Add(bookId);
             var updatedShelve = new ShelveCreateDTO(){
                 Id = shelveId,
@@ -104,7 +104,7 @@ namespace TP.Services.Shelve
         /// <param name="id"></param>
         public async Task<ShelveDTO> DeleteBookFromShelve(string bookId, string shelveId) {
             var shelve = await _shelvesRepository.GetShelveById(shelveId);
-            var bookList = shelve.Books.Select(b => bookId).Distinct().ToList();
+            var bookList = shelve.Books.Select(b => b.Id).ToList();
             var index = shelve.Books.ToList().FindIndex(b => b.Id == bookId);
             bookList.RemoveAt(index);
             var updatedShelve = new ShelveCreateDTO(){
