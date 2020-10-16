@@ -15,14 +15,10 @@ namespace TP.Controllers
     [Route("[controller]")]
     public class ShelvesController : ControllerBase
     {
-        private readonly ILogger<BooksController> _logger;
         private readonly IShelvesService _shelvesService;
-        private readonly IMapper _mapper;
 
         public ShelvesController(ILogger<BooksController> logger, IShelvesService shelvesService, IMapper mapper)
         {
-            _logger = logger;
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _shelvesService = shelvesService ?? throw new ArgumentNullException(nameof(shelvesService));
         }
         
@@ -96,6 +92,109 @@ namespace TP.Controllers
                 return Problem(e.Message);
             }
             return Created("/shelve/add", result);
+        }
+
+        [HttpPut, Route("/shelves/{shelveId}/add/book/{bookId}")]
+        public async Task<IActionResult> AddBookToShelve(string bookId, string shelveId)
+        {
+            ShelveDTO result;
+            try {
+                result = await _shelvesService.AddBookToShelve(bookId, shelveId);
+            }
+            catch (AlreadyInDBException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            catch (NotFoundException e) {
+                Console.WriteLine(e);
+                return NotFound(e.Message);
+            }
+            catch (BadRequestException e) {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
+            }
+            catch (ArgumentNullException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            return Created("", result);
+        }
+
+        [HttpPut, Route("/shelves/{shelveId}/remove/book/{bookId}")]
+        public async Task<IActionResult> DeleteBookFromShelve(string bookId, string shelveId)
+        {
+            ShelveDTO result;
+            try {
+                result = await _shelvesService.DeleteBookFromShelve(bookId,shelveId);
+            }
+            catch (AlreadyInDBException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            catch (NotFoundException e) {
+                Console.WriteLine(e);
+                return NotFound(e.Message);
+            }
+            catch (BadRequestException e) {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
+            }
+            catch (ArgumentNullException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut, Route("/shelves/{id}/update")]
+        public async Task<IActionResult> UpdateToShelve(string id, [FromBody] ShelveCreateDTO createShelveDTO)
+        {
+            ShelveDTO result;
+            try {
+                result = await _shelvesService.PutShelve(id, createShelveDTO);
+            }
+            catch (AlreadyInDBException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            catch (NotFoundException e) {
+                Console.WriteLine(e);
+                return NotFound(e.Message);
+            }
+            catch (BadRequestException e) {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
+            }
+            catch (ArgumentNullException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            return Ok(result);
+        }
+
+        [HttpDelete, Route("/shelves/{id}")]
+        public async Task<IActionResult> DeleteShelve(string id)
+        {
+            try {
+                await _shelvesService.DeleteShelve(id);
+            }
+            catch (AlreadyInDBException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            catch (NotFoundException e) {
+                Console.WriteLine(e);
+                return NotFound(e.Message);
+            }
+            catch (BadRequestException e) {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
+            }
+            catch (ArgumentNullException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            return NoContent();
         }
     }
 }

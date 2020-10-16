@@ -82,6 +82,57 @@ namespace TP.Services.Shelve
         public async Task DeleteShelve(string id) {
             await _shelvesRepository.DeleteShelveById(id);
         }
+        /// <summary>
+        /// Consutructor.
+        /// </summary>
+        /// <param name="id"></param>
+        public async Task<ShelveDTO> AddBookToShelve(string bookId, string shelveId){
+            var shelve = await _shelvesRepository.GetShelveById(shelveId);
+            var bookList = shelve.Books.Select(b => bookId).Distinct().ToList();
+            bookList.Add(bookId);
+            var updatedShelve = new ShelveCreateDTO(){
+                Id = shelveId,
+                Name = shelve.Name,
+                BookIds = bookList
+            };
+            var result = await _shelvesRepository.UpdateShelve(shelveId, _mapper.Map<ShelveCollection>(updatedShelve));
+            return result;
+        }
+        /// <summary>
+        /// Consutructor.
+        /// </summary>
+        /// <param name="id"></param>
+        public async Task<ShelveDTO> DeleteBookFromShelve(string bookId, string shelveId) {
+            var shelve = await _shelvesRepository.GetShelveById(shelveId);
+            var bookList = shelve.Books.Select(b => bookId).Distinct().ToList();
+            var index = shelve.Books.ToList().FindIndex(b => b.Id == bookId);
+            bookList.RemoveAt(index);
+            var updatedShelve = new ShelveCreateDTO(){
+                Id = shelveId,
+                Name = shelve.Name,
+                BookIds = bookList
+            };
+            var result = await _shelvesRepository.UpdateShelve(shelveId, _mapper.Map<ShelveCollection>(updatedShelve));
+            return result;
+        }
+
+        /// <summary>
+        /// Consutructor.
+        /// </summary>
+        /// <param name="id"></param>
+        public async Task<IEnumerable<BookDTO>> SearchBooksInShelves(IEnumerable<BookDTO> resultSearch) {
+            var elem = resultSearch.ToList();
+            foreach(var book in resultSearch) {
+                var result = await _shelvesRepository.GetAllShelves(new ShelvesFilters(){
+                    FilterByBookId = book.Id,
+                });
+                if (result.Count() == 0) {
+                    var index = elem.FindIndex(b => b.Id == book.Id);
+                    elem.RemoveAt(index);
+                }
+            }
+            return elem;
+        }
 
     }
 }

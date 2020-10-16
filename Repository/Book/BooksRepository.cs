@@ -8,6 +8,7 @@ using TP.Collection;
 using TP.CustomException;
 using TP.Data;
 using TP.DTO;
+using TP.Filters;
 
 namespace TP.Repository.Book
 {
@@ -47,9 +48,13 @@ namespace TP.Repository.Book
         /// <summary>
         /// Consutructor.
         /// </summary>
-        public async Task<IEnumerable<BookDTO>> GetAllBooks() {
+        public async Task<IEnumerable<BookDTO>> GetAllBooks(BooksFilters filters) {
             var applyFilter = _builderFilter.Empty;
-            var result = await _context.BookCollection.Find(applyFilter).SortBy(book => book.Authors).ToListAsync();
+            if (filters.FilterByTitle != null ) {
+                applyFilter = _builderFilter.Where(book => book.Title.Contains(filters.FilterByTitle));
+                
+            }
+            var result = await _context.BookCollection.Find(applyFilter).SortBy(book => book.Authors).Skip(filters.pageSize * (filters.pageNumber - 1)).ToListAsync();
             return _mapper.Map<IEnumerable<BookDTO>>(result);
         }
 

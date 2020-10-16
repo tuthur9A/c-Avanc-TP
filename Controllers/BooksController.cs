@@ -6,11 +6,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Serilog;
 using TP.CustomException;
 using TP.DTO;
+using TP.Filters;
 using TP.Services.Book;
 using TP.Services.GoogleAPI;
+using TP.Services.Shelve;
 
 namespace TP.Controllers
 {
@@ -20,21 +21,23 @@ namespace TP.Controllers
     {
         private readonly ILogger<BooksController> _logger;
         private readonly IBooksService _bookService;
+        private readonly IShelvesService _shelvesService;
         private readonly IMapper _mapper;
         private readonly IGoogleAPIClientService _googleApiClientService;
 
-        public BooksController(ILogger<BooksController> logger, IBooksService bookService, IGoogleAPIClientService googleAPIClientService, IMapper mapper)
+        public BooksController(ILogger<BooksController> logger, IBooksService bookService, IGoogleAPIClientService googleAPIClientService, IMapper mapper, IShelvesService shelvesService)
         {
             _logger = logger;
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _bookService = bookService ?? throw new ArgumentNullException(nameof(bookService));
+            _shelvesService = shelvesService ?? throw new ArgumentNullException(nameof(shelvesService));
             _googleApiClientService = googleAPIClientService ?? throw new ArgumentNullException(nameof(googleAPIClientService));
         }
 
         [HttpGet, Route("/")]
         public async Task<IEnumerable<BookDTO>> Get()
         {
-            return await _bookService.GetBooks();
+            return await _bookService.GetBooks(new BooksFilters(){});
         }
 
         [HttpGet, Route("/google")]
@@ -83,6 +86,36 @@ namespace TP.Controllers
                     booksList.Add(book);
                     await _bookService.PostBook(book);
                 }
+            }
+            catch (AlreadyInDBException e) {
+                Console.WriteLine(e);
+                return Problem(e.Message);
+            }
+            catch (NotFoundException e) {
+                Console.WriteLine(e);
+                return NotFound(e.Message);
+            }
+            catch (BadRequestException e) {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
+            }
+            return Ok(booksList);
+        }
+
+                [HttpGet, Route("/search")]
+        public async Task<IActionResult> Search([FromQuery(Name = "title")] string title)
+        {
+            IEnumerable<BookDTO> booksList ;
+            try {
+                    var result = await _bookService.GetBooks(new BooksFilters(){
+                        FilterByTitle = title,
+                        pageNumber = 1,
+                        pageSize = 10,
+                    });
+                    if (result.Count() == 0) {
+                        return NoContent();
+                    }
+                    booksList = await _shelvesService.SearchBooksInShelves(result);
             }
             catch (AlreadyInDBException e) {
                 Console.WriteLine(e);

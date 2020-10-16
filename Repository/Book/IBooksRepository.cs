@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using TP.Collection;
 using TP.DTO;
+using TP.Filters;
 
 namespace TP.Repository.Book
 {
@@ -13,7 +14,7 @@ namespace TP.Repository.Book
     {
 #pragma warning disable 1591
         Task<BookDTO> GetBookById(string id);
-        Task<IEnumerable<BookDTO>> GetAllBooks();
+        Task<IEnumerable<BookDTO>> GetAllBooks(BooksFilters filters);
         Task<BookDTO> AddBook(BookCollection book);
         Task<BookDTO> UpdateBook(string id, BookCollection updatedBook);
         Task DeleteBookById(string id);

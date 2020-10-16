@@ -5,6 +5,7 @@ using AutoMapper;
 using TP.Collection;
 using TP.CustomException;
 using TP.DTO;
+using TP.Filters;
 using TP.Repository.Book;
 
 namespace TP.Services.Book
@@ -37,8 +38,8 @@ namespace TP.Services.Book
         /// <summary>
         /// get books .
         /// </summary>
-        public async Task<IEnumerable<BookDTO>> GetBooks() {
-            return await _booksRepository.GetAllBooks();
+        public async Task<IEnumerable<BookDTO>> GetBooks(BooksFilters filters) {
+            return await _booksRepository.GetAllBooks(filters);
         }
         /// <summary>
         /// post book .

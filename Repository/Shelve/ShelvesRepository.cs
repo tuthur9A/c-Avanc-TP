@@ -79,6 +79,7 @@ namespace TP.Repository.Shelve
                 throw new NotFoundException("the book with Id " + id + " is not in DB");
             }
              var update = Builders<ShelveCollection>.Update
+                .Set("name", updatedShelve.Name )
                 .Set("bookIds", updatedShelve.BookIds );
                 await _context.ShelveCollection.UpdateOneAsync(applyFilter, update);
                 var result = await _context.ShelveCollection.Find(applyFilter).FirstOrDefaultAsync();
