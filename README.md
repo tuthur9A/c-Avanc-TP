@@ -11,8 +11,11 @@ Shelve
 =============
 #### API ENDPOINT
 GetAll shelves : `https://{{Domaine}}/shelves`
+
 Search shelves by bookId  : `https://{{Domaine}}/shelves/search?id=??`
+
 Post shelve : `https://{{Domaine}}/shelves/add`
+
 with Object : 
 ```json
 {
@@ -21,8 +24,11 @@ with Object :
 }
 ```
 Add book to shelve : `https://{{Domaine}}/shelves/{shelveId}/add/book/{bookId}`
+
 Remove book to shelve : `https://{{Domaine}}/shelves/{shelveId}/remove/book/{bookId}`
+
 Post shelve : `https://{{Domaine}}/shelves/{id}/update`
+
 with Object : 
 ```json
 {
@@ -32,3 +38,4 @@ with Object :
 }
 ```
 Delete shelve : `https://{{Domaine}}/shelves/{id}`
+
