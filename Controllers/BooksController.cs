@@ -113,8 +113,8 @@ namespace TP.Controllers
             try {
                     var result = await _bookService.GetBooks(new BooksFilters(){
                         FilterByTitle = title,
-                        pageNumber = 1,
-                        pageSize = 10,
+                        PageNumber = 1,
+                        PageSize = 10,
                     });
                     if (result.Count() == 0) {
                         return NoContent();

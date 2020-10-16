@@ -17,7 +17,7 @@ namespace TP.Controllers
     {
         private readonly IShelvesService _shelvesService;
 
-        public ShelvesController(ILogger<BooksController> logger, IShelvesService shelvesService, IMapper mapper)
+        public ShelvesController(IShelvesService shelvesService)
         {
             _shelvesService = shelvesService ?? throw new ArgumentNullException(nameof(shelvesService));
         }

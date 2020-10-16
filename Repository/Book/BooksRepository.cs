@@ -54,7 +54,7 @@ namespace TP.Repository.Book
                 applyFilter = _builderFilter.Where(book => book.Title.Contains(filters.FilterByTitle));
                 
             }
-            var result = await _context.BookCollection.Find(applyFilter).SortBy(book => book.Authors).Skip(filters.pageSize * (filters.pageNumber - 1)).ToListAsync();
+            var result = await _context.BookCollection.Find(applyFilter).SortBy(book => book.Authors).Skip(filters.PageSize * (filters.PageNumber - 1)).ToListAsync();
             return _mapper.Map<IEnumerable<BookDTO>>(result);
         }
 

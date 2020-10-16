@@ -17,12 +17,12 @@ namespace TP.Filters
         /// pagesize.
         /// </summary>
         [JsonProperty("pageNumber")]
-        public int pageNumber { get; set; }
+        public int PageNumber { get; set; }
 
         /// <summary>
         /// pagesize.
         /// </summary>
         [JsonProperty("pageSize")]
-        public int pageSize { get; set; }
+        public int PageSize { get; set; }
     }
 }
