@@ -31,15 +31,19 @@ namespace TP.Controllers
             }
             catch (AlreadyInDBException e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("AlreadyInDBException: " + e.Message);
             }
             catch (NotFoundException e) {
                 Console.WriteLine(e);
-                return NotFound(e.Message);
+                return NotFound("NotFoundException: " + e.Message);
             }
             catch (BadRequestException e) {
                 Console.WriteLine(e);
-                return BadRequest(e.Message);
+                return BadRequest("BadRequestException: " + e.Message);
+            }
+            catch (Exception e) {
+                Console.WriteLine(e);
+                return Problem("Exception: " + e.Message);
             }
             return Ok(result);
         }
@@ -55,15 +59,19 @@ namespace TP.Controllers
             }
             catch (AlreadyInDBException e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("AlreadyInDBException: " + e.Message);
             }
             catch (NotFoundException e) {
                 Console.WriteLine(e);
-                return NotFound(e.Message);
+                return NotFound("NotFoundException: " + e.Message);
             }
             catch (BadRequestException e) {
                 Console.WriteLine(e);
-                return BadRequest(e.Message);
+                return BadRequest("BadRequestException: " + e.Message);
+            }
+            catch (Exception e) {
+                Console.WriteLine(e);
+                return Problem("Exception: " + e.Message);
             }
             return Ok(result);
         }
@@ -77,19 +85,19 @@ namespace TP.Controllers
             }
             catch (AlreadyInDBException e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("AlreadyInDBException: " + e.Message);
             }
             catch (NotFoundException e) {
                 Console.WriteLine(e);
-                return NotFound(e.Message);
+                return NotFound("NotFoundException: " + e.Message);
             }
             catch (BadRequestException e) {
                 Console.WriteLine(e);
-                return BadRequest(e.Message);
+                return BadRequest("BadRequestException: " + e.Message);
             }
-            catch (ArgumentNullException e) {
+            catch (Exception e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("Exception: " + e.Message);
             }
             return Created("/shelve/add", result);
         }
@@ -103,19 +111,19 @@ namespace TP.Controllers
             }
             catch (AlreadyInDBException e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("AlreadyInDBException: " + e.Message);
             }
             catch (NotFoundException e) {
                 Console.WriteLine(e);
-                return NotFound(e.Message);
+                return NotFound("NotFoundException: " + e.Message);
             }
             catch (BadRequestException e) {
                 Console.WriteLine(e);
-                return BadRequest(e.Message);
+                return BadRequest("BadRequestException: " + e.Message);
             }
-            catch (ArgumentNullException e) {
+            catch (Exception e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("Exception: " + e.Message);
             }
             return Created("", result);
         }
@@ -129,19 +137,19 @@ namespace TP.Controllers
             }
             catch (AlreadyInDBException e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("AlreadyInDBException: " + e.Message);
             }
             catch (NotFoundException e) {
                 Console.WriteLine(e);
-                return NotFound(e.Message);
+                return NotFound("NotFoundException: " + e.Message);
             }
             catch (BadRequestException e) {
                 Console.WriteLine(e);
-                return BadRequest(e.Message);
+                return BadRequest("BadRequestException: " + e.Message);
             }
-            catch (ArgumentNullException e) {
+            catch (Exception e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("Exception: " + e.Message);
             }
             return Ok(result);
         }
@@ -155,19 +163,19 @@ namespace TP.Controllers
             }
             catch (AlreadyInDBException e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("AlreadyInDBException: " + e.Message);
             }
             catch (NotFoundException e) {
                 Console.WriteLine(e);
-                return NotFound(e.Message);
+                return NotFound("NotFoundException: " + e.Message);
             }
             catch (BadRequestException e) {
                 Console.WriteLine(e);
-                return BadRequest(e.Message);
+                return BadRequest("BadRequestException: " + e.Message);
             }
-            catch (ArgumentNullException e) {
+            catch (Exception e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("Exception: " + e.Message);
             }
             return Ok(result);
         }
@@ -180,19 +188,19 @@ namespace TP.Controllers
             }
             catch (AlreadyInDBException e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("AlreadyInDBException: " + e.Message);
             }
             catch (NotFoundException e) {
                 Console.WriteLine(e);
-                return NotFound(e.Message);
+                return NotFound("NotFoundException: " + e.Message);
             }
             catch (BadRequestException e) {
                 Console.WriteLine(e);
-                return BadRequest(e.Message);
+                return BadRequest("BadRequestException: " + e.Message);
             }
-            catch (ArgumentNullException e) {
+            catch (Exception e) {
                 Console.WriteLine(e);
-                return Problem(e.Message);
+                return Problem("Exception: " + e.Message);
             }
             return NoContent();
         }
